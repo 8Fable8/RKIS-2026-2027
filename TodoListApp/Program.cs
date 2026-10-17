@@ -71,6 +71,17 @@ namespace TodoListApp
                         continue;
                     }
 
+                    // Если места не хватает, создаём массив в 2 раза длиннее
+                    if (count == todos.Length)
+                    {
+                        string[] newTodos = new string[todos.Length * 2];
+                        for (int i = 0; i < todos.Length; i++)
+                        {
+                            newTodos[i] = todos[i];
+                        }
+                        todos = newTodos;
+                    }
+
                     todos[count] = parts[1];
                     count++;
                     Console.WriteLine("Задача добавлена");
