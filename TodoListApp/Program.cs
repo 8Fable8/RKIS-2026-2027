@@ -58,6 +58,10 @@ namespace TodoListApp
                     Console.WriteLine("view - показать все задачи");
                     Console.WriteLine("exit - выйти из программы");
                 }
+                else if (command == "profile")
+                {
+                    Console.WriteLine($"{firstName} {lastName}, {birthYear}");
+                }
                 else
                 {
                     Console.WriteLine("Неизвестная команда. Введите help, чтобы увидеть список команд.");
