@@ -1,15 +1,39 @@
-﻿Console.WriteLine("Работу выполнили Семикин и Слесарев");
+﻿﻿using System;
 
-Console.WriteLine("Введите имя:");
-string firstName = Console.ReadLine() ?? "";
+namespace TodoListApp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Шаг 7: Измените текст, который выводится в консоль (укажите вашу фамилию и напарника)
+            Console.WriteLine("Работу выполнили: Слесарев и  Семикин");
+            Console.WriteLine(new string('-', 40));
 
-Console.WriteLine("Введите фамилию:");
-string lastName = Console.ReadLine() ?? "";
+            // Шаг 8: Написание программы
+            // 1. Попросить пользователя ввести имя, фамилию и год рождения
+            Console.Write("Введите ваше имя: ");
+            string firstName = Console.ReadLine();
 
-Console.WriteLine("Введите год рождения:");
-string birthYearText = Console.ReadLine() ?? "";
+            Console.Write("Введите вашу фамилию: ");
+            string lastName = Console.ReadLine();
 
-int birthYear = int.Parse(birthYearText);
-int age = DateTime.Now.Year - birthYear;
+            Console.Write("Введите ваш год рождения: ");
+            string birthYearInput = Console.ReadLine();
 
-Console.WriteLine($"Добавлен пользователь {firstName} {lastName}, возраст - {age}");
+            // 2 & 3. Переводим год рождения в целое число и вычисляем возраст
+            if (int.TryParse(birthYearInput, out int birthYear))
+            {
+                int currentYear = DateTime.Now.Year;
+                int age = currentYear - birthYear;
+
+                // 4. Выводим сообщение заданного формата
+                Console.WriteLine($"Добавлен пользователь {firstName} {lastName}, возраст - {age}");
+            }
+            else
+            {
+                Console.WriteLine("Ошибка: вы ввели некорректный год рождения.");
+            }
+        }
+    }
+}
