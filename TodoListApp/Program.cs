@@ -75,6 +75,16 @@ namespace TodoListApp
                     count++;
                     Console.WriteLine("Задача добавлена");
                 }
+                else if (command == "view")
+                {
+                    for (int i = 0; i < todos.Length; i++)
+                    {
+                        if (!string.IsNullOrEmpty(todos[i]))
+                        {
+                            Console.WriteLine($"{i + 1}. {todos[i]}");
+                        }
+                    }
+                }
                 else
                 {
                     Console.WriteLine("Неизвестная команда. Введите help, чтобы увидеть список команд.");
