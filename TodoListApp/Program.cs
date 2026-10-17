@@ -62,6 +62,19 @@ namespace TodoListApp
                 {
                     Console.WriteLine($"{firstName} {lastName}, {birthYear}");
                 }
+                else if (command == "add")
+                {
+                    string[] parts = input.Split('"');
+                    if (parts.Length < 2 || string.IsNullOrWhiteSpace(parts[1]))
+                    {
+                        Console.WriteLine("Использование: add \"текст задачи\"");
+                        continue;
+                    }
+
+                    todos[count] = parts[1];
+                    count++;
+                    Console.WriteLine("Задача добавлена");
+                }
                 else
                 {
                     Console.WriteLine("Неизвестная команда. Введите help, чтобы увидеть список команд.");
