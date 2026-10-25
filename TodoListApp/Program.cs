@@ -4,103 +4,87 @@ namespace TodoListApp
 {
     class Program
     {
+        private const int InitialCapacity = 2;
+        private const string AppName = "TodoListApp";
+
         static void Main(string[] args)
         {
-            // Шаг 7: Измените текст, который выводится в консоль (укажите вашу фамилию и напарника)
-            Console.WriteLine("Работу выполнили: Слесарев и Семикин");
-            Console.WriteLine(new string('-', 40));
+            string firstName = "Виталий";
+            string lastName = "Слесарев";
+            int birthYear = 2004;
 
-            // Шаг 8: Написание программы
-            // 1. Попросить пользователя ввести имя, фамилию и год рождения
-            Console.Write("Введите ваше имя: ");
-            string firstName = Console.ReadLine();
+            string[] todos = new string[InitialCapacity];
+            bool[] statuses = new bool[InitialCapacity];
+            DateTime[] dates = new DateTime[InitialCapacity];
+            int todoCount = 0;
 
-            Console.Write("Введите вашу фамилию: ");
-            string lastName = Console.ReadLine();
+            Console.WriteLine($"{AppName} запущен. Введите 'help' для списка команд.");
 
-            Console.Write("Введите ваш год рождения: ");
-            string birthYearInput = Console.ReadLine();
-
-            // 2 & 3. Переводим год рождения в целое число и вычисляем возраст
-            if (int.TryParse(birthYearInput, out int birthYear))
+            bool isRunning = true;
+            while (isRunning)
             {
-                int currentYear = DateTime.Now.Year;
-                int age = currentYear - birthYear;
+                Console.Write("\nВведите команду: ");
+                string input = Console.ReadLine()?.Trim();
 
-                // 4. Выводим сообщение заданного формата
-                Console.WriteLine($"Добавлен пользователь {firstName} {lastName}, возраст - {age}");
-            }
-            else
-            {
-                Console.WriteLine("Ошибка: вы ввели некорректный год рождения.");
-                return;
-            }
+                if (string.IsNullOrEmpty(input)) continue;
 
-            // Лекция 3
-            string[] todos = new string[2];
-            int count = 0;
+                string[] parts = input.Split(new[] { ' ' }, 2);
+                string command = parts[0].ToLower();
 
-            while (true)
-            {
-                Console.Write("> ");
-                string input = (Console.ReadLine() ?? "").Trim();
-                string command = input.Split(' ')[0];
-
-                if (command == "exit")
+                switch (command)
                 {
-                    break;
-                }
-                else if (command == "help")
-                {
-                    Console.WriteLine("help - список команд");
-                    Console.WriteLine("profile - данные пользователя");
-                    Console.WriteLine("add \"текст задачи\" - добавить задачу");
-                    Console.WriteLine("view - показать все задачи");
-                    Console.WriteLine("exit - выйти из программы");
-                }
-                else if (command == "profile")
-                {
-                    Console.WriteLine($"{firstName} {lastName}, {birthYear}");
-                }
-                else if (command == "add")
-                {
-                    string[] parts = input.Split('"');
-                    if (parts.Length < 2 || string.IsNullOrWhiteSpace(parts[1]))
-                    {
-                        Console.WriteLine("Использование: add \"текст задачи\"");
-                        continue;
-                    }
-
-                    // Если места не хватает, создаём массив в 2 раза длиннее
-                    if (count == todos.Length)
-                    {
-                        string[] newTodos = new string[todos.Length * 2];
-                        for (int i = 0; i < todos.Length; i++)
-                        {
-                            newTodos[i] = todos[i];
-                        }
-                        todos = newTodos;
-                    }
-
-                    todos[count] = parts[1];
-                    count++;
-                    Console.WriteLine("Задача добавлена");
-                }
-                else if (command == "view")
-                {
-                    for (int i = 0; i < todos.Length; i++)
-                    {
-                        if (!string.IsNullOrEmpty(todos[i]))
-                        {
-                            Console.WriteLine($"{i + 1}. {todos[i]}");
-                        }
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Неизвестная команда. Введите help, чтобы увидеть список команд.");
+                    case "help":
+                        PrintHelp();
+                        break;
+                    case "profile":
+                        PrintProfile(firstName, lastName, birthYear);
+                        break;
+                    case "exit":
+                        isRunning = false;
+                        Console.WriteLine("Завершение работы программы...");
+                        break;
+                    default:
+                        Console.WriteLine("Неизвестная команда. Введите 'help'.");
+                        break;
                 }
             }
+        }
+
+        private static void PrintHelp()
+        {
+            Console.WriteLine("Доступные команды:");
+            Console.WriteLine("  help                   - список команд");
+            Console.WriteLine("  profile                - данные пользователя");
+            Console.WriteLine("  add \"текст\"            - добавить задачу");
+            Console.WriteLine("  view                   - посмотреть задачи");
+            Console.WriteLine("  done <индекс>          - отметить выполненной");
+            Console.WriteLine("  update <индекс> \"текст\"- обновить текст задачи");
+            Console.WriteLine("  delete <индекс>        - удалить задачу");
+            Console.WriteLine("  exit                   - выход");
+        }
+
+        private static void PrintProfile(string firstName, string lastName, int birthYear)
+        {
+            Console.WriteLine($"Профиль: {firstName} {lastName}, {birthYear}");
+        }
+
+        private static void ExpandArrays(ref string[] todos, ref bool[] statuses, ref DateTime[] dates)
+        {
+            int newSize = todos.Length * 2;
+            string[] newTodos = new string[newSize];
+            bool[] newStatuses = new bool[newSize];
+            DateTime[] newDates = new DateTime[newSize];
+
+            for (int i = 0; i < todos.Length; i++)
+            {
+                newTodos[i] = todos[i];
+                newStatuses[i] = statuses[i];
+                newDates[i] = dates[i];
+            }
+
+            todos = newTodos;
+            statuses = newStatuses;
+            dates = newDates;
         }
     }
 }
