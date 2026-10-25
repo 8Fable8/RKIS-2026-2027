@@ -1,5 +1,7 @@
 ﻿﻿[25.10.2026 13:47] Виталити: using System;
 
+using System;
+
 namespace TodoListApp
 {
     class Program
@@ -46,6 +48,15 @@ namespace TodoListApp
                     case "view":
                         ViewTasks(todos, statuses, dates, todoCount);
                         break;
+                    case "done":
+                        MarkTaskDone(statuses, dates, todoCount, argument);
+                        break;
+                    case "update":
+                        UpdateTask(todos, dates, todoCount, argument);
+                        break;
+                    case "delete":
+                        DeleteTask(ref todos, ref statuses, ref dates, ref todoCount, argument);
+                        break;
                     case "exit":
                         isRunning = false;
                         Console.WriteLine("Завершение работы программы...");
@@ -79,7 +90,7 @@ namespace TodoListApp
         {
             if (string.IsNullOrWhiteSpace(argument))
             {
-                Console.WriteLine("Ошибка: Укажите текст задачи в кавычках.");
+                Console.WriteLine("Ошибка: Укажите текст задачи.");
                 return;
             }
 
@@ -103,12 +114,68 @@ namespace TodoListApp
                 Console.WriteLine("Список задач пуст.");
                 return;
             }
-[25.10.2026 13:47] Виталити: Console.WriteLine("Список задач:");
+
+            Console.WriteLine("Список задач:");
             for (int i = 0; i < count; i++)
             {
                 string statusText = statuses[i] ? "выполнено" : "не выполнено";
                 Console.WriteLine($"{i + 1}. {todos[i]} — [{statusText}] (дата: {dates[i]:dd.MM.yyyy HH:mm:ss})");
             }
+        }
+
+        private static void MarkTaskDone(bool[] statuses, DateTime[] dates, int count, string argument)
+        {
+            if (!int.TryParse(argument, out int index) || index < 1 || index > count)
+            {
+                Console.WriteLine("Ошибка: Неверный номер задачи.");
+                return;
+            }
+
+            int realIndex = index - 1;
+            statuses[realIndex] = true;
+            dates[realIndex] = DateTime.Now;
+            Console.WriteLine($"Задача {index} отмечена как выполненная!");
+        }
+
+        private static void UpdateTask(string[] todos, DateTime[] dates, int count, string argument)
+        {
+            string[] parts = argument.Split(new[] { ' ' }, 2);
+            if (parts.Length < 2 || !int.TryParse(parts[0], out int index) || index < 1 || index > count)
+            {
+                Console.WriteLine("Ошибка формат. Пример: update 1 \"Новый текст\"");
+                return;
+            }
+
+            int realIndex = index - 1;
+            todos[realIndex] = parts[1].Trim('"');
+            dates[realIndex] = DateTime.Now;
+            Console.WriteLine($"Задача {index} успешно обновлена!");
+        }
+
+        private static void DeleteTask(ref string[] todos, ref bool[] statuses, ref DateTime[] dates, ref int count, string argument)
+        {
+            if (!int.TryParse(argument, out int index) || index < 1 || index > count)
+            {
+                Console.WriteLine("Ошибка: Неверный номер задачи.");
+                return;
+            }
+
+            int realIndex = index - 1;
+
+            // Сдвиг элементов влево
+            for (int i = realIndex; i < count - 1; i++)
+            {
+                todos[i] = todos[i + 1];
+                statuses[i] = statuses[i + 1];
+                dates[i] = dates[i + 1];
+            }
+
+            todos[count - 1] = null;
+            statuses[count - 1] = false;
+            dates[count - 1] = default;
+            count--;
+
+            Console.WriteLine($"Задача {index} удалена!");
         }
 
         private static void ExpandArrays(ref string[] todos, ref bool[] statuses, ref DateTime[] dates)
